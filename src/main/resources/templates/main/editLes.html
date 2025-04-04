@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑课程</title>
+    <th:block th:replace="~{main/common::cssjs}"></th:block>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+
+</head>
+<body>
+<div th:replace="~{main/common::header}"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="~{main/common::sider}"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+            <div class="container">
+                <h1>编辑课程</h1>
+                <form class="form-horizontal" th:action="@{/editLes}" th:method="post">
+                    <div class="form-group">
+                        <label for="xh">课程号</label>
+                        <input type="text" class="form-control" id="xh" name="id" th:value="${les.id}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="xm">课程名</label>
+                        <input type="text" class="form-control" id="xm" name="name" th:value="${les.name}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ls">教授老师</label>
+                        <input type="text" class="form-control" id="ls" name="teacher" th:value="${les.teacher}" required>
+                    </div>
+                    <button type="submit" class="btn btn-submit">提交</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
