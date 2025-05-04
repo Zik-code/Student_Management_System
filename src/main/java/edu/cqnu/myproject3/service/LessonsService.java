@@ -37,7 +37,7 @@ public class LessonsService {
         return lessons;
     }
 
-    public void setStudents(List<Lesson> teachers) {
-        this.lessons = teachers;
+    public void setLessons(List<Lesson> lessons) {
+        this.lessons = lessons;
     }
 }

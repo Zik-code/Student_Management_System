@@ -7,7 +7,6 @@ public class Lesson {
 
     private Integer id;
     private String name;
-
     private String teacher;
 
     public Lesson() {
@@ -17,7 +16,7 @@ public class Lesson {
     public Lesson(Integer id, String name, String teacher) {
         this.id = id;
         this.name = name;
-        this.teacher=teacher;
+        this.teacher = teacher;
     }
 
     public Integer getId() {
@@ -28,13 +27,12 @@ public class Lesson {
         return name;
     }
 
-
     public String getTeacher() {
         return teacher;
     }
 
     public void setTeacher(String teacher) {
-        this.teacher= teacher;
+        this.teacher = teacher;
     }
 
     public void setId(Integer id) {
@@ -47,11 +45,10 @@ public class Lesson {
 
     @Override
     public String toString() {
-        return "Teacher{" +
+        return "Lesson{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", site='" + teacher + '\'' +
+                ", teacher='" + teacher + '\'' +
                 '}';
     }
 }
-

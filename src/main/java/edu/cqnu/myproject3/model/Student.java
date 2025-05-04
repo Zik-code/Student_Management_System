@@ -31,7 +31,6 @@ public class Student {
         return age;
     }
 
-
     public void setId(Integer id) {
         this.id = id;
     }
@@ -44,15 +43,12 @@ public class Student {
         this.age = age;
     }
 
-
     @Override
     public String toString() {
         return "Student{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
-                '\'' +
                 '}';
     }
 }
-

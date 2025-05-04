@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-
     <meta charset="UTF-8">
     <title>学生信息</title>
     <th:block th:replace="~{main/common::cssjs}"></th:block>
-    <!--    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">-->
-    <!--    <script th:src="@{js/bootstrap.js}"></script>-->
-    <!-- Bootstrap core CSS -->
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
-
+    <link th:href="@{/static/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/static/css/dashboard.css}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 <div th:replace="~{main/common::header}"></div>
@@ -23,7 +18,7 @@
             <h2 class="sub-header">学生信息表</h2>
             <div class="table-responsive">
                 <div style="margin:20px 0 15px 20px">
-                    <a class="btn btn-primary" th:href="@{/addStu}">添加学生</a>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStudentModal">添加学生</button>
                 </div>
                 <table class="table table-bordered">
                     <thead>
@@ -35,19 +30,14 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="s:${students}">
-                        <td th:text="${s.id}"></td>
-                        <td th:text="${s.name}"></td>
-                        <td th:text="${s.age}"></td>
+                    <tr th:each="s : ${students}">
+                        <td th:text="${s.id}">学号</td>
+                        <td th:text="${s.name}">姓名</td>
+                        <td th:text="${s.age}">年龄</td>
                         <td>
-                            <a th:href="@{'/editStu?id='+${s.id}}" class="btn btn-edit btn-sm">
-                                <i class="fa fa-edit"></i> 编辑
-                            </a>
-                            <a th:href="@{'/delStu?id='+${s.id}}" class="btn btn-delete btn-sm">
-                                <i class="fa fa-trash"></i> 删除
-                            </a>
+                            <a href="#" onclick="openEditModal([[${s.id}]])" class="btn btn-sm btn-warning">编辑</a>
+                            <a href="#" onclick="deleteStudent([[${s.id}]])" class="btn btn-sm btn-danger">删除</a>
                         </td>
-
                     </tr>
                     </tbody>
                 </table>
@@ -56,6 +46,143 @@
     </div>
 </div>
 
+<!-- 编辑学生信息弹窗 -->
+<div class="modal fade" id="editStudentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">编辑学生信息</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editStudentForm">
+                    <input type="hidden" id="editStudentId" name="id">
+                    <div class="form-group">
+                        <label>姓名</label>
+                        <input type="text" id="editStudentName" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>年龄</label>
+                        <input type="number" id="editStudentAge" name="age" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="submitEditStudent()">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- 添加学生信息弹窗 -->
+<div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">添加学生信息</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addStudentForm">
+                    <div class="form-group">
+                        <label>学号</label>
+                        <input type="number" id="addStudentId" name="id" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>姓名</label>
+                        <input type="text" id="addStudentName" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>年龄</label>
+                        <input type="number" id="addStudentAge" name="age" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="submitAddStudent()">添加学生</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 编辑学生信息 - 打开弹窗并获取数据
+    function openEditModal(id) {
+        $.ajax({
+            url: "/editStu",
+            type: "GET",
+            data: {id: id},
+            success: function (stu) {
+                if (stu) {
+                    $('#editStudentId').val(stu.id);
+                    $('#editStudentName').val(stu.name);
+                    $('#editStudentAge').val(stu.age);
+                    $('#editStudentModal').modal('show');
+                }
+            }
+        });
+    }
+
+    // 提交编辑学生信息
+    function submitEditStudent() {
+        $.ajax({
+            url: "/editStu",
+            type: "POST",
+            data: $('#editStudentForm').serialize(),
+            success: function (res) {
+                if (res === "success") {
+                    alert("编辑成功");
+                    $('#editStudentModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert("编辑失败");
+                }
+            }
+        });
+    }
+
+    // 提交添加学生信息
+    function submitAddStudent() {
+        $.ajax({
+            url: "/addStudentInfo",
+            type: "POST",
+            data: $('#addStudentForm').serialize(),
+            success: function (res) {
+                if (res === "success") {
+                    alert("添加成功");
+                    $('#addStudentModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert("添加失败");
+                }
+            }
+        });
+    }
+
+    // 删除学生信息 - 弹窗确认后发送 AJAX 请求
+    function deleteStudent(id) {
+        if (confirm("确定要删除这个学生吗？")) {
+            $.ajax({
+                url: "/delStu",
+                type: "GET",
+                data: {id: id},
+                success: function (res) {
+                    if (res === "success") {
+                        alert("删除成功");
+                        location.reload();
+                    } else {
+                        alert("删除失败");
+                    }
+                }
+            });
+        }
+    }
+</script>
 </body>
 </html>
